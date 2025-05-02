@@ -12,3 +12,4 @@ __pycache__/
 Thumbs.db
 *.bat
 *.cmd
+*.link
