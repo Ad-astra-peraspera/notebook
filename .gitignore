@@ -1,0 +1,12 @@
+# 忽略临时/缓存文件
+__pycache__/
+*.pyc
+*.log
+*.tmp
+*.bak
+.DS_Store
+
+# 忽略 OneDrive 本地同步日志等
+*.lnk
+*.ini
+Thumbs.db
