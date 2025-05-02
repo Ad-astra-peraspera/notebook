@@ -10,3 +10,5 @@ __pycache__/
 *.lnk
 *.ini
 Thumbs.db
+*.bat
+*.cmd
