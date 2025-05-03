@@ -2,7 +2,7 @@
 | ------------------------------------------------------------ | ---------------- | -------------------------------------------- |
 | [344.反转字符串](##反转字符串) [url](https://leetcode.cn/problems/reverse-string/description/) | 简单 字符串      |                                              |
 | [541.反转字符串II](##反转字符串II) [url](https://leetcode.cn/problems/reverse-string-ii/description/) | 简单 字符串      | 运算符优先级 字符串不可变 range() reversed() |
-|                                                              |                  |                                              |
+| [替换数字](##替换数字) [url](https://kamacoder.com/problempage.php?pid=1064) |                  |                                              |
 |                                                              |                  |                                              |
 
 ## 反转字符串
@@ -134,5 +134,97 @@ class Solution:
 
 这两种方法的时空复杂度都是O(n)
 
++++
 
+## 替换数字
+
+> 看到这道题目的第一反应即是：遍历字符串，遇到数字，就删除这个数字，插入一个“number”。于是接下来的问题转化成：
+>
+> 1.如何判断数字、如何删除数字
+>
+> 2.如何在这个地方插入一个number
+>
+> 想到昨天的题目：先把这个字符串转化成数组，开始遍历。由于python数组可以储存不同类型的元素，因此直接使用替换就可以做出来了。
+
+```python
+class Solution(object):
+    def changenum(self,s:str)->str:
+        l_s = list(s)
+        num_set={"1","2","3","4","5","6","7","8","9","0"}
+        for i in range(len(l_s)):
+            if l_s[i] in num_set:
+                l_s[i] = "number"
+        return "".join(l_s)
+
+if __name__ == "__main__":
+    solution = Solution()
+
+    while True:
+        try:
+            s = input()
+            result = solution.changenum(s)
+            print(result)
+        except EOFError:
+            break
+```
+
+==在做这道题发现的问题==
+
+1. range()里是应该是一个数字，因此要加上len，这点老是忘记
+2. 把字符串转列表后，里面的数字其实是被看作字符类型而不是整型，因此集合里应该是“1”等
+
+看了题解，有另外的方法
+
++ 构造一个新字符串，一边遍历原字符串一边往新字符串中添加元素
++ 代码随想录所使用的方法：扩充字符串，长度是原来的长度加数字个数*（6-1）
+
+```python
+class Solution(object):
+    def changenum(self,s:str)->str:
+        #统计字符串里的数字个数
+        num_count = sum(1 for char in s if char.isdigit())
+        new_s_len = len(s) + (num_count*5)
+        new_s = ['']*new_s_len
+        oldindex = len(s) - 1
+        newindex = new_s_len - 1
+
+        while oldindex >= 0 :
+
+            if  s[oldindex].isdigit() :
+                new_s[newindex-5:newindex+1] = "number"
+                newindex -= 6
+            else :
+                new_s[newindex] = s[oldindex]
+                newindex -= 1
+            oldindex -= 1
+
+        return "".join(new_s)
+
+if __name__ == "__main__":
+    solution = Solution()
+
+    while True:
+        try:
+            s = input()
+            result = solution.changenum(s)
+            print(result)
+        except EOFError:
+            break
+```
+
+==学到了新的函数`isdigit()`==
+
+注意，要使用这个方法的话一定要加()，比如下面这句
+
+```python
+if  s[oldindex].isdigit:
+```
+
+`()` —— `isdigit` 是一个函数，**需要调用它**，不然只是检查函数对象是否存在（永远是 `True`），而不是判断字符是不是数字。
+
+另外，下面这行代码也值得学习。切片操作如果使用熟练的话可以提高代码的简洁性。
+
+```python
+new_s[newindex-5:newindex+1] = "number"
+```
 
