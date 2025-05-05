@@ -1,9 +1,9 @@
-| 题目                                                         | 难度/ 相关知识点 | 关键知识点                                   |
-| ------------------------------------------------------------ | ---------------- | -------------------------------------------- |
-| [344.反转字符串](##反转字符串) [url](https://leetcode.cn/problems/reverse-string/description/) | 简单 字符串      |                                              |
-| [541.反转字符串II](##反转字符串II) [url](https://leetcode.cn/problems/reverse-string-ii/description/) | 简单 字符串      | 运算符优先级 字符串不可变 range() reversed() |
-| [替换数字](##替换数字) [url](https://kamacoder.com/problempage.php?pid=1064) |                  |                                              |
-|                                                              |                  |                                              |
+| 题目                                                         | 难度/ 相关知识点   | 关键知识点                                   |
+| ------------------------------------------------------------ | ------------------ | -------------------------------------------- |
+| [344.反转字符串](##反转字符串) [url](https://leetcode.cn/problems/reverse-string/description/) | 简单 字符串        |                                              |
+| [541.反转字符串II](##反转字符串II) [url](https://leetcode.cn/problems/reverse-string-ii/description/) | 简单 字符串        | 运算符优先级 字符串不可变 range() reversed() |
+| [替换数字](##替换数字) [url](https://kamacoder.com/problempage.php?pid=1064) | 简单 字符串 双指针 |                                              |
+| [151.反转字符串里的单词](##反转字符串里的单词)  [url](https://leetcode.cn/problems/reverse-words-in-a-string/description/) | 中等               | 反转字符串 “ ”.join                          |
 
 ## 反转字符串
 
@@ -226,5 +226,45 @@ if  s[oldindex].isdigit:
 
 ```python
 new_s[newindex-5:newindex+1] = "number"
+```
+
++++
+
+## 反转字符串中的单词
+
+> 这道题反映出对split()函数、切片操作、 “ ” .join 的掌握不足
+
+```python
+class Solution:
+    def reverseWords(self, s: str) -> str:
+        s = s[::-1]
+        return " ".join(word[::-1] for word in s.split())
+        '''
+        split()自动忽略多余的空格
+        " ".join 把后面的用单个空格连接起来
+        '''
+        
+```
+
+另外还有其他的方法，如双指针判断是否是多余的空格等等，我这里用了用来一种方法，新建一个数组来储存单词，最后使用reverse反转这个数组。
+
+```python
+class Solution:
+    def reverseWords(self, s: str) -> str:
+        words = []
+        word = ''
+        s += " "
+
+        for ch in s :
+            if ch == " " :
+                if word != '':
+                    words.append(word)
+                    word = ''
+                continue
+                
+            word += ch
+
+        words.reverse()
+        return " ".join(words)        
 ```
 
