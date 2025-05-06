@@ -4,6 +4,7 @@
 | [541.反转字符串II](##反转字符串II) [url](https://leetcode.cn/problems/reverse-string-ii/description/) | 简单 字符串        | 运算符优先级 字符串不可变 range() reversed() |
 | [替换数字](##替换数字) [url](https://kamacoder.com/problempage.php?pid=1064) | 简单 字符串 双指针 |                                              |
 | [151.反转字符串里的单词](##反转字符串里的单词)  [url](https://leetcode.cn/problems/reverse-words-in-a-string/description/) | 中等               | 反转字符串 “ ”.join                          |
+| [右旋转字符串](##右旋转字符串) [url](https://programmercarl.com/kamacoder/0055.%E5%8F%B3%E6%97%8B%E5%AD%97%E7%AC%A6%E4%B8%B2.html#%E6%80%9D%E8%B7%AF) | 简单               |                                              |
 
 ## 反转字符串
 
@@ -266,5 +267,83 @@ class Solution:
 
         words.reverse()
         return " ".join(words)        
+```
+
++++
+
+## 右旋转字符串
+
+> 一种很简单容易想到的解法就是先把字符串转化为数组，在字符串中使用切片操作实现快速倒置。
+
+```python
+class solution(object):
+    def right_change(self,s:str,k:int)->str:
+        s = list(s)
+        right = len(s) -1
+        left = right - k + 1
+
+        s[0:0] = s[left:right+1]
+        del s[len(s)-k:]
+
+        return "".join(s)
+
+if __name__ == "__main__":
+    try:
+        k = int(input())
+        s = input()
+        print(solution().right_change(s,k))
+    except Exception as e:
+        print("ERROR:",e)
+```
+
+==注意==
+
+在做这道题出错的地方：
+
+```python
+#1.
+if __name__ == "__main__":
+
+#2. solution需要先实例化 可以用下面这种 right_change 是实例方法
+print(solution().right_change(s,k))
+#也可以用另外一种
+sol = solution()
+print(sol.right_change(s,k))
+
+#3.s[0:0]是空切片，即从索引0-0的元素，是[]
+s[0:0] = s[left:right+1]
+
+#4.
+"".join(s) #意思是把s用“”里的东西连接起来。“”里没有内容那么意思就是直接连接，中间什么也不要加。
+```
+
+有非常简洁的方法可以实现：
+
+```python
+k = int(input())
+s = input()
+
+print(s[-k:] + s[:-k])
+```
+
+
+
+另外，题解的思想十分有趣，就是沿用[151.反转字符串里的单词](##反转字符串里的单词)的思想，进行两次翻转，这样顺序就成了题目所要求的。
+
+```python
+class solution(object):
+    def right_change(self,s:str,k:int)->str:
+        s = s[::-1]
+        s = s[:k][::-1]+s[k:][::-1]
+
+        return s
+
+if __name__ == "__main__":
+    try:
+        k = int(input())
+        s = input()
+        print(solution().right_change(s,k))
+    except Exception as e:
+        print("ERROR:",e)  
 ```
 
