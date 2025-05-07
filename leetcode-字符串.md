@@ -5,6 +5,7 @@
 | [替换数字](##替换数字) [url](https://kamacoder.com/problempage.php?pid=1064) | 简单 字符串 双指针 |                                              |
 | [151.反转字符串里的单词](##反转字符串里的单词)  [url](https://leetcode.cn/problems/reverse-words-in-a-string/description/) | 中等               | 反转字符串 “ ”.join                          |
 | [右旋转字符串](##右旋转字符串) [url](https://programmercarl.com/kamacoder/0055.%E5%8F%B3%E6%97%8B%E5%AD%97%E7%AC%A6%E4%B8%B2.html#%E6%80%9D%E8%B7%AF) | 简单               |                                              |
+| [28.找出字符串中第一个匹配项的下标](##找出字符串中第一个匹配项的下标) [url](https://leetcode.cn/problems/find-the-index-of-the-first-occurrence-in-a-string/description/) | 中等（？）         | [KMP](###KMP)                                |
 
 ## 反转字符串
 
@@ -346,4 +347,49 @@ if __name__ == "__main__":
     except Exception as e:
         print("ERROR:",e)  
 ```
+
++++
+
+## 找出字符串中第一个匹配项的下标
+
+这道题可以用暴力法破解，当然很简单，但是用的最多的还是KMP算法
+
+### ==KMP==
+
+我觉得这个版本是讲的最好的：[url]([【搬运】油管阿三哥讲KMP查找算法，中英文字幕，人工翻译，简单易懂_哔哩哔哩_bilibili](https://www.bilibili.com/video/BV18k4y1m7Ar/?spm_id_from=333.337.search-card.all.click&vd_source=5cb240326e24e6e5b879b832de7eb079))
+
+在整个方法中，最重要的是对next数组的计算。
+
+我觉得在这道题里，所谓的前后缀对帮助理解并不直观，也并没有帮助理解。这道题应该多回顾，属于在我目前刷到的题里最难的。
+
+```python
+class Solution:
+    def strStr(self, haystack: str, needle: str) -> int:
+        #构造模式串的next数组
+        next = [0]*len(needle)
+        #1.初始化j、i指针.j指向前缀.i指向后缀 
+        j = 0
+        i = 1
+        while i < len(needle):
+            while j > 0 and needle[i] != needle[j]:
+                j = next[j-1]
+            if needle[i] == needle[j]:
+                j += 1
+                next[i] = j
+            i += 1
+        #开始用next数组匹配
+        
+        j = 0 #用来指向next数组
+        for i_h in range(len(haystack)): #haystack的指针，不会回退
+            while j > 0 and  haystack[i_h] != needle[j]:
+                j = next[j-1]
+            if haystack[i_h] == needle[j]:
+                j += 1
+            if j == len(needle):
+                return i_h - len(needle) + 1
+        return -1
+
+```
+
+
 
