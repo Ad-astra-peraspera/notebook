@@ -1,7 +1,265 @@
+## 哈希表
+
+| 题目                                                         | 难度/考察知识点                   | 关键知识点            |
+| ------------------------------------------------------------ | --------------------------------- | --------------------- |
+| 242.[有效的字母异位词](##有效的字母异位词) [url](https://leetcode.cn/problems/valid-anagram/description/) | 简单/ 哈希表                      | defaultdic ord() 数组 |
+| 349.[两个数组的交集](##两个数组的交集) [url](https://leetcode.cn/problems/intersection-of-two-arrays/description/) | 简单/ 哈希表 二分查找 双指针 排序 | 集合set               |
+| 202.[快乐数](##快乐数)                                       | 简单/哈希表 双指针                |                       |
+| 1.[两数之和](##两数之和)                                     | 简单/                             |                       |
+| [15. 三数之和](##三数之和) [url](https://leetcode.cn/problems/3sum/) | 中等/双指针/排序                  | sort()方法            |
+| [18.四数之和](##四数之和)  [url](https://leetcode.cn/problems/4sum/description/) | 中等/                             |                       |
+
+
+
+## 有效的字母异位词
+
+> 这道题目很简单
+>
+> 要满足是字母异位词：1.字符数相等 2.所使用的字母完全相等
+> 观察例题发现，可能一个字母会被使用不止一次，因此容易想到使用哈希表，储存每个字符串的字母出现的次数，最后比较两个哈希表。
+
+### 使用字典
+
+```python
+class Solution:
+    def isAnagram(self, s: str, t: str) -> bool:
+        #要满足是字母异位词：1.字符数相等 2.所使用的字母完全相等
+        #观察例题发现，可能一个字母会被使用不止一次
+        ls = len(s)
+        lt = len(t)
+        if ls != lt:
+            return False
+        else:
+            if self.checkCh(s) == self.checkCh(t):
+                return True
+            else:
+                return False
+                #遍历字符串，把字符串的字母作为键，字母出现的次数作为值加入字典
+    
+    def checkCh(self,string:str)->dict:
+        result={}
+        for ch in string:
+            if ch not in result:
+                result[ch]=1
+            else:
+                result[ch]+=1
+        return result
+      
+#可优化：
+        else:
+            return self.checkCh(s) == self.checkCh(t)
+```
+
+这个解法时间复杂度O(n),空间复杂度==O(1)==。
+
+> - 空间复杂度只看“新增了多少空间”，不是操作了多少次。在这里，由于全是小写字母，不论字符串多长，字典里最多是26个字母，因此是O(1)
+
+####  collections.defaultdict
+
+这个写法还可以继续优化：
+
+```python
+class Solution:
+    def isAnagram(self, s: str, t: str) -> bool:
+        from collections import defaultdict
+        
+        s_dict = defaultdict(int)
+        t_dict = defaultdict(int)
+        for x in s:
+            s_dict[x] += 1
+        
+        for x in t:
+            t_dict[x] += 1
+        return s_dict == t_dict
+```
+
+`defaultdict(int)`表示：**遇到不存在的键，自动创建并赋初值0**。
+
+int其实是int()函数，在遇到一个不存在的键的时候，如‘z’,就会自动：
+
+`dic['z']=int()`而int()返回0。
+
+`defaultdict(工厂函数)`括号里不一定是int，可以是任意==工厂函数==。工厂函数是一个**可以调用返回初值的函数**，比如：int、list、set等。也可以是自己编写的函数
+
+| **写法**          | **默认值** | **适用场景**             |
+| ----------------- | ---------- | ------------------------ |
+| defaultdict(int)  | 0          | 统计次数（计数器）       |
+| defaultdict(list) | []         | 分组归类（一对多关系）   |
+| defaultdict(set)  | set()      | 分组去重（去除重复元素） |
+
+++++
+
+
+
+### 使用数组
+
+在这道题里，由于只有26个小写字母，那么使用数组会更加简单。因为字典涉及到维护哈希值等操作，而数组只需要直接通过索引访问。
+
+而使用数组需要解决的问题是，如何把字符映射到索引0-25中。
+
+#### Ord()函数
+
+`Ord()`函数 会返回字符 的 Unicode 编码（整数）。ord('a') 是 'a' 的编码（97）。所以 'a' - 'a' = 0，‘b’ - ‘a’ = 1，…，‘z’ - ‘a’ = 25。
+
+```python
+class Solution:
+    def isAnagram(self, s: str, t: str) -> bool:
+        arr = [0]*26
+        for ch in s:
+            arr[ord(ch)-ord('a')] += 1
+        for ch in t:
+            arr[ord(ch)-ord('a')] -= 1
+        for _ in arr:
+            if _ !=0:
+                return False
+        return True
+
+```
+
+==注意==
+
+```python
+for _ in arr:
+    if _ !=0:
+```
+
+这里我第一次做的时候返了一个错误：我写成了arr[_] ，\_是数组里的**元素值**，**不是索引**！因此直接判断__的值是否为0就好了。
+
++++
+
+
+
+### 其他解法：collections.Counter
+
+Counter 是 collections 模块中的一个**子类**，专门用来做**元素计数**。它本质上就是一个**带有默认值的字典**，默认值是0。使用起来非常简单，**可以直接统计字符串中每个字符出现的次数**。
+
+```python
+class Solution(object):
+    def isAnagram(self, s: str, t: str) -> bool:
+        from collections import Counter
+        a_count = Counter(s)
+        b_count = Counter(t)
+        return a_count == b_count
+```
+
+
+
++++
+
+## 两个数组的交集
+
+
+
+> 第一次做的思路：
+>
+> 数组里的数的大小不能确定，因此上一题使用的数组的解法在此不太适用
+>
+> 这道题即是要输出两个数组里相同的元素，可以考虑字典，字典里的键如果在另一个字典可以找到，即把这个键存入一个数组返回。
+
+```python
+class Solution:
+    def intersection(self, nums1: List[int], nums2: List[int]) -> List[int]:
+        from collections import defaultdict
+        dic1=defaultdict(int)
+        dic2=defaultdict(int)
+        for i in nums1:
+            dic1[i] += 1
+        for i in nums2:
+            dic2[i] += 1
+        result=[]
+        for i in dic1:
+            if i in dic2:
+                result.append(i)
+        return result 
+```
+
+时空复杂度都是O(n)
+
+### 使用集合
+
+```python
+class Solution:
+    def intersection(self, nums1: List[int], nums2: List[int]) -> List[int]:
+        return list(set(nums1)&set(nums2))
+```
+
+时空复杂度也是O(n)，但由于不需要存value的值，因此空间占用要稍小一些。若只建一个集合去查另外一个集合空间占用会更小。
+
+
+
+##  快乐数
+
+> 在第一次做的时候，思路出现了一些问题：
+>
+> 这道题要做的其实是判断一个数，每位的平方和能否是1（10、100、1000.。。。）  那么只要知道10、100、1000、这些是由哪些平方和的数相加得到，并且这个数只能由n个（1-9）的平方相加而成。但是会不会有数字不断增大，那怎么判断是否终止循环呢？
+
+这个思路错了，因为虽然在最开始会快速增加，但是接近1000，这个数的每一位的平方和会比自己小，因此一定会在这个范围循环。
+
+那么只需要一个集合，判断是否出现在这个集合里，出现了说明是陷入了无限循环。
+
+```python
+
+class Solution:
+    def isHappy(self, n: int) -> bool:
+        seen=set() #seen 里不能有1
+        while n not in seen :#如果n没在seen里，就继续算
+            if n == 1:
+                return True
+            seen.add(n)
+            n = self.sum_square(n)
+            
+        #如果发现n在seen里，说明循环了，return false
+        return False
+        
+    def sum_square(self,n:int)->int:
+        if n == 0:
+            return 0
+        return (n%10)**2+self.sum_square(n//10)
+```
+
+这里的平方和有更简单的方法：
+
+```python
+n = sum(int(i)**2 for i in str(n))
+```
+
+
+
+
+
+## 两数之和
+
+> 以前做过，被搞得自闭，但现在来看很简单啦。
+
+```python
+class Solution:
+    def twoSum(self, nums: List[int], target: int) -> List[int]:
+        #建立一个字典，储存数组中的数字及其下标。数字为键，下标为值
+        dic = {}
+        for index,value in enumerate(nums):
+            if (target-value) in dic:
+                return [dic[target-value],index]
+            else:
+                dic[value]=index
+
+        return -1
+          
+```
+
+但是在又一次做的时候，还是发现了诸多没有完全搞明白的地方。
+
+`enumerate()`函数的返回值是(下标，值)的元组。
+
+要先看target-value是否在dic里，这样可以避免 当前元素是3，target是6，把元素储存进去，看6-3=3，返回两个3的坐标的情况。
+
+
+
++++
+
 ## 三数之和
 
 >  一开始，我的思路是这样的：
->   #题目要求：数组中每个元素只能使用一次。要求元组不能重复（即元素相同、顺序不同的元组视作一个答案）
+>  #题目要求：数组中每个元素只能使用一次。要求元组不能重复（即元素相同、顺序不同的元组视作一个答案）
 >  \#观察示例发现，输出的三元组里的元素是值不是索引。  \#思路：两个指针遍历数组，储存两两数之和，并用字典储存，和为键，值为下标的集合
 >  \#然后再：满足下标不在这个和所对应的集合里，即是满足题意条件的答案。
 
