@@ -6,6 +6,7 @@
 | [151.反转字符串里的单词](##反转字符串里的单词)  [url](https://leetcode.cn/problems/reverse-words-in-a-string/description/) | 中等               | 反转字符串 “ ”.join                          |
 | [右旋转字符串](##右旋转字符串) [url](https://programmercarl.com/kamacoder/0055.%E5%8F%B3%E6%97%8B%E5%AD%97%E7%AC%A6%E4%B8%B2.html#%E6%80%9D%E8%B7%AF) | 简单               |                                              |
 | [28.找出字符串中第一个匹配项的下标](##找出字符串中第一个匹配项的下标) [url](https://leetcode.cn/problems/find-the-index-of-the-first-occurrence-in-a-string/description/) | 中等（？）         | [KMP](###KMP)                                |
+| [459.重复的子字符串](##重复的子字符串)                       | 简单               |                                              |
 
 ## 反转字符串
 
@@ -391,5 +392,16 @@ class Solution:
 
 ```
 
++++
 
 
+
+## 重复的子字符串
+
+> 第一次做的思路：只需要沿用昨天学到的KMP算法。如果字符串是由重复的子字符串组成的，那么s字符串的next的最后一位数字一定不是0
+
+双倍字符串的解法：
+
+![image-20250508195645669](../../Library/Application Support/typora-user-images/image-20250508195645669.png)
+
+![image-20250508195731845](../../Library/Application Support/typora-user-images/image-20250508195731845.png)
