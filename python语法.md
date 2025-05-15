@@ -494,5 +494,73 @@ for val in d.values:
 
 
 
+## python里的栈与队列
 
 
+
+### 基础
+
+| 数据结构      | 特点             | 操作方式                               |
+| ------------- | ---------------- | -------------------------------------- |
+| 栈（Stack）   | 先进后出（LIFO） | 只能从“顶端”添加或删除元素             |
+| 队列（Queue） | 先进先出（FIFO） | 从一端进入（入队），另一端出去（出队） |
+
+### 栈的实现与操作
+
+Python 没有专门的栈类，一般用 **`list`** 模拟：
+
+```python
+stack = []		 #新建栈
+
+stack.append(1)  # 入栈
+stack.append(2)
+
+stack.pop()      # 出栈，返回2
+
+stack[-1]        #查看栈顶
+
+not stack        #判空
+```
+
+> `list` 的 `append()` 和 `pop()` 默认是对末尾操作，因此效率较高。
+
+### 队列的实现与操作
+
+方法1`collections.deque`
+
+```python
+from collections import deque
+
+queue = deque()
+queue.append(1)    # 入队
+queue.append(2)
+queue.popleft()    # 出队，返回1 fifo
+
+not queue          #判空
+```
+
+`deque` 是双端队列，两端操作都是 O(1)。
+
+方法2 模拟队列
+
+```python
+queue = []
+queue.append(1)     # 入队
+queue.append(2)
+queue.pop(0)        # 出队，但效率低
+```
+
+### 底层原理	
+
+### list 的底层原理
+
+- Python 的 `list` 底层是**动态数组（Dynamic Array）**，可以自动扩容。
+- `append()` 在末尾添加元素：摊销时间复杂度是 **O(1)**。
+- `pop()` 末尾删除元素：**O(1)**。
+- `pop(0)` 删除第一个元素，需要移动所有后续元素：**O(n)** ❌ 不推荐用于队列。
+
+### deque 的底层原理
+
+- `collections.deque` 使用的是**双端链表/块链表**。
+- 两端添加、删除元素都是 **O(1)**，非常适合做队列或双端栈。
+- 适合大量插入/删除场景，不适合随机访问。
