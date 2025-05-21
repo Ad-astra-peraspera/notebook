@@ -550,7 +550,51 @@ queue.append(2)
 queue.pop(0)        # 出队，但效率低
 ```
 
-### 底层原理	
+### 双端队列
+
+首先要了解双端队列与队列的区别
+
+**一般的队列（Queue）：只能 FIFO**：First In, First Out（先进先出）
+
+这类队列的典型行为是：
+
+| **操作名** | **含义**         |
+| ---------- | ---------------- |
+| enqueue    | 入队，从队尾加入 |
+| dequeue    | 出队，从队首弹出 |
+
+```python
+from queue import Queue
+
+q = Queue()
+q.put(1)    # 入队
+q.put(2)
+q.put(3)
+
+print(q.get())  # 出队，输出 1
+print(q.get())  # 输出 2
+#这个 Queue 是线程安全的，但功能上就是标准队列（FIFO），不能从中间或尾部删元素，也不能倒序。
+```
+
+ **双端队列（Deque）：可以两头进出**
+
+| **方法**      | **说明**           |
+| ------------- | ------------------ |
+| append(x)     | 从右边加入         |
+| appendleft(x) | 从左边加入         |
+| pop()         | 从右边删除（队尾） |
+| popleft()     | 从左边删除（队首） |
+
+```python
+from collections import deque
+d = deque()
+d.append(1)
+d.append(2)
+d.pop()        # 可以从队尾删
+d.appendleft(0)  # 可以从队首加
+```
+
+### 底层原理
 
 ### list 的底层原理
 
