@@ -5,7 +5,8 @@
 | 题目                                                         | 难度/考察知识点       | 关键知识点                           |
 | ------------------------------------------------------------ | --------------------- | ------------------------------------ |
 | 704.[二分查找](##二分查找)<br />[url](https://leetcode.cn/problems/binary-search/description/) | 简单/ 二分查找        | 二分查找                             |
-|                                                              |                       |                                      |
+| 27.[移除元素](##移除元素)                                    |                       |                                      |
+| 977.[有序数组的平方](##有序数组的平方)                       |                       |                                      |
 | 59.[螺旋矩阵II](##螺旋矩阵II)   <br>[url](https://leetcode.cn/problems/spiral-matrix-ii/description/) | 中/ 数组 矩阵         | [方向移动算法](#######方向移动算法)  |
 | [区间和](##区间和)<br />[url](https://www.programmercarl.com/kamacoder/0058.区间和.html)（非leetcode） | 简单/ ACM输入输出模式 | [前缀和（Prefix Sum）](######前缀和) |
 | [开发商购买土地](##开发商购买土地)<br />[url](https://kamacoder.com/problempage.php?pid=1044)(非leetcode) | 简单/ ACM输入输出模式 | 前缀和                               |
@@ -27,17 +28,25 @@
 
 
 
+## 移除元素
 
 
 
+需要注意的是检查元素是否越界的条件。
 
-
-
-
-
-
-
-
+```python
+class Solution:
+    def removeElement(self, nums: List[int], val: int) -> int:
+        #使用快慢指针来解决 
+        slow = fast = 0
+        l = len(nums)
+        while fast < l :
+            if nums[fast] != val:
+                nums[slow] = nums[fast]
+                slow += 1
+            fast += 1
+        return slow
+```
 
 
 
@@ -333,19 +342,19 @@ pre_row=[]
 ```python
 class listnode:
   def __init__(self,val=0,next=None):
-    self.val=val
-    self.next=next
+    self.val = val
+    self.next = next
 ```
 
-在这里，\__init \__()给了两个默认的输入：val=0与next=None,即是在未定义的时候，让节点值为0，默认为尾节点。
+在这里，\__init \__()给了两个默认的输入：val = 0与 next = None,即是在未定义的时候，让节点值为0，默认为尾节点。
 
 如何删除节点？在python中，不需要手动管理内存，只需要让上一个节点的指针指向下一个元素即可，无需手动管理内存。
 
 ```python
-Node1,next=node2
+Node1,next = node2
 
 #删除node2
-Node1.next=node3
+Node1.next = node3
 
 ```
 
@@ -353,14 +362,14 @@ Node1.next=node3
 
 ```python
 #需要通过指针来遍历；
-pointer=head
-pointer=pointer.next
+pointer = head
+pointer = pointer.next
 ```
 
 ###### 虚拟头节点：
 
 ```python
-dummy_head=ListNode(next=head)
+dummy_head = ListNode(next=head)
 #通过虚拟头节点，可以有效避免在删除节点时需要考虑该节点是否为头节点的问题，在最后返回头节点时，只需要 
 return dummy_head.next
 ```
@@ -371,26 +380,26 @@ return dummy_head.next
 
 ```python
 class ListNode:
-  def __init__(self,val=0,next=None):
-    self.val=val
-    self.next=next
+  def __init__(self,val = 0,next = None):
+    self.val = val
+    self.next = next
 
 class solution:
   def removeElements(self,head:Optinal[ListNode],val:int)->Optional[ListNode]:
-    dummy=ListNode(next=head)#给一个新的虚拟头节点
+    dummy = ListNode(next = head)#给一个新的虚拟头节点
     #指针从头节点开始遍历
-    pointer=head
-    while(pointer!=None):
-      while(ListNode(pointer).val==val):
-        ListNode(pointer-1).next=ListNode(pointer+1)  
-    	pointer+=1
+    pointer = head
+    while(pointer != None):
+      while(ListNode(pointer).val == val):
+        ListNode(pointer-1).next = ListNode(pointer+1)  
+    	pointer += 1
     return dummy.next
 ```
 
 但其中有几个问题：
-`while(ListNode(pointer).val==val):`
+`while(ListNode(pointer).val == val):`
 
-`pointer`本身已经是一个实例了，`ListNode(pointer)`会调用listnode（）==再次生成一个listnode对象==。因此，这里应该是`pointer.val==val`
+`pointer`本身已经是一个实例了，`ListNode(pointer)`会调用listnode（）==再次生成一个listnode对象==。因此，这里应该是`pointer.val == val`
 
 同样的，pointer-1也是因为我对pointer的类型不明确导致的。在数组中指针常用下标来充当，但是在这里：pointer=head，就说明pointer本身是listnode里的对象类型（一个节点实例）。
 
@@ -401,29 +410,29 @@ class solution:
 另外，还有一个问题：
 
 ```python
-    pointer=head
+    pointer = head
   会报错：
  # AttributeError: 'NoneType' object has no attribute 'next'
 ```
 
-这是由于当传入的链表为空时，pointer=head=None，那么pointer.next就会报错。 如果从pointer=dummy(虚拟头节点)开始，那么则不会报错。
+这是由于当传入的链表为空时，pointer等于head等于None，那么pointer.next就会报错。 如果从pointer = dummy(虚拟头节点)开始，那么则不会报错。
 
 ```python
 class ListNode:
-  def __init__(self,val=0,next=None):
-    self.val=val
-    self.next=next
+  def __init__(self,val = 0,next=None):
+    self.val = val
+    self.next = next
 
 class solution:
   def removeElements(self,head:Optinal[ListNode],val:int)->Optional[ListNode]:
-    dummy=ListNode(next=head)#给一个新的虚拟头节点
+    dummy = ListNode(next = head)#给一个新的虚拟头节点
     #指针从头节点开始遍历
-    pointer=dummy
-    while(pointer.next!=None):
-      ifpointer.next.val==val:
-        pointer.next=pointer.next.next  
+    pointer = dummy
+    while(pointer.next != None):#while pointer.next:
+      if pointer.next.val == val:
+        pointer.next = pointer.next.next  
       else:
-    		pointer=pointer.next
+    		pointer = pointer.next
     return dummy.next
 ```
 
@@ -436,22 +445,22 @@ class solution:
 ```python
 class ListNode:
   def __init__(self,val=0,next=None):
-    self.val=val
-    self.next=next
+    self.val = val
+    self.next = next
     
 class solution:
   def removeElements(self,head:Optinal[ListNode],val:int)->Optional[ListNode]:
-    if head=None:
+    if head = None:
     	return None
-    head.next=self.removeElements(head.next,val)
-    return head.next if head.val ==val else head
+    head.next = self.removeElements(head.next,val)
+    return head.next if head.val == val else head
     
 ```
 
 ==注意==
 
 > ```python
-> head.next=self.removeElements(head.next,val)
+> head.next = self.removeElements(head.next,val)
 > ```
 >
 > 这里必须要加`self`**因为，在函数内部调用了 removeElements，没有加 self.的话， Python 以为在调用一个“全局函数”，结果找不到，会报错。**
@@ -677,7 +686,7 @@ class MyLinkedList:
  #以下两条语句代表了截然不同的意思
  tmp=cur.next#暂存下一个节点
  cur.next=pre#修改链表方向
-  #我的理解是：=是赋值，只能又右边赋值到左边
+  #我的理解是：=是赋值，只能把右边赋值到左边
   因此 cur.next是把cur.next(即cur节点的下一个节点)暂存到tmp
   cur.next=pre 则是把pre“赋值给”cur所指向的下一个节点
 ```
@@ -775,6 +784,24 @@ class Solution:
                 sec_to_swap.next=tmp
             cur=sec_to_swap
         return dummy_head.next
+```
+
+```python
+class Solution:
+    def swapPairs(self, head: Optional[ListNode]) -> Optional[ListNode]:
+        if head == None:
+            return None
+        dummy = ListNode(next = head)
+        cur = head
+        pre = dummy
+        while pre.next and pre.next.next:
+            p1,p2,tmp = cur,cur.next,cur.next.next
+            pre.next = p2
+            p2.next = p1
+            p1.next = tmp
+            pre = p1
+            cur = tmp
+        return dummy.next
 ```
 
 
@@ -980,6 +1007,20 @@ class Solution:
             return None
         else:
             return per.next
+###############
+
+#同样的，这个特点说明也可以使用集合set()来完成
+class Solution:
+    def detectCycle(self, head: Optional[ListNode]) -> Optional[ListNode]:
+        #使用集合来完成
+        visited = set()
+        cur = head 
+        while cur:
+            if cur in visited:
+                return cur
+            visited.add(cur)
+            cur = cur.next
+        return None
 ```
 
 ==2.快慢指针==
@@ -994,25 +1035,25 @@ Floyd判环在代码随想录讲的非常清楚，可以直接在代码随想录
 class Solution:
     def detectCycle(self, head: Optional[ListNode]) -> Optional[ListNode]:
         #使用快慢指针来解决这道题
-        fast=head
-        slow=head
+        fast = head
+        slow = head
         #开始寻找快慢指针第一次重合的地方
         if fast is None or fast.next is None or fast.next.next is None:
             return None
         else:
-            fast=fast.next.next
-            slow=slow.next
+            fast = fast.next.next
+            slow = slow.next
             while fast is not slow:
                 if fast.next is not None and fast.next.next is not None:
-                    fast=fast.next.next
-                    slow=slow.next
+                    fast = fast.next.next
+                    slow = slow.next
                 else:
                     return None
-            p1=head
-            p2=fast
+            p1 = head
+            p2 = fast
             while p1 is not p2:
-                p1=p1.next
-                p2=p2.next
+                p1 = p1.next
+                p2 = p2.next
             return p1
         
 ```

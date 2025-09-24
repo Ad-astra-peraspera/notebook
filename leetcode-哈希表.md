@@ -6,19 +6,12 @@
 | 349.[两个数组的交集](##两个数组的交集) [url](https://leetcode.cn/problems/intersection-of-two-arrays/description/) | 简单/ 哈希表 二分查找 双指针 排序 | 集合set               |
 | 202.[快乐数](##快乐数)                                       | 简单/哈希表 双指针                |                       |
 | 1.[两数之和](##两数之和)                                     | 简单/                             |                       |
+| [四数相加II](##四数相加II)[url](https://leetcode.cn/problems/4sum-ii/submissions/661928452/) | 中等                              | 推导式                |
+| [赎金信](##赎金信)[url](https://leetcode.cn/problems/ransom-note/) | 简单                              |                       |
 | [15. 三数之和](##三数之和) [url](https://leetcode.cn/problems/3sum/) | 中等/双指针/排序                  | sort()方法            |
 | [18.四数之和](##四数之和)  [url](https://leetcode.cn/problems/4sum/description/) | 中等/                             |                       |
 
-
-
-## 有效的字母异位词
-
-> 这道题目很简单
->
-> 要满足是字母异位词：1.字符数相等 2.所使用的字母完全相等
-> 观察例题发现，可能一个字母会被使用不止一次，因此容易想到使用哈希表，储存每个字符串的字母出现的次数，最后比较两个哈希表。
-
-### 使用字典
+### 有效的字母异位词
 
 ```python
 class Solution:
@@ -198,7 +191,6 @@ class Solution:
 那么只需要一个集合，判断是否出现在这个集合里，出现了说明是陷入了无限循环。
 
 ```python
-
 class Solution:
     def isHappy(self, n: int) -> bool:
         seen=set() #seen 里不能有1
@@ -255,6 +247,59 @@ class Solution:
 
 
 +++
+
+## 四数之和II
+
+> 最开始的思路其实是对的，把四个数字分为两两只和，让两部分之和为0即可。但是后面没有想清楚这样这样怎么知道出现和一样（如A = [1, 2] B = [-2, -1]，a和b的和有两种情况 = 0）怎么统计精确。但是后面看了题解发现可以使用字典对这种和进行统计。
+
+```python
+class Solution:
+    def fourSumCount(self, nums1: List[int], nums2: List[int], nums3: List[int], nums4: List[int]) -> int:
+        import collections
+        sums_of_1_2 = collections.Counter( a+b for a in nums1 for b in nums2)
+        ans = 0
+        for c in nums3:
+            for d in nums4:
+                if -c - d in sums_of_1_2:
+                    ans += sums_of_1_2[-c-d]
+        return ans
+```
+
+值得注意的是`sums_of_1_2 = collections.Counter( a+b for a in nums1 for b in nums2)`这一句
+
+使用了生成器表达式**(generator expression)**，语法上和 **列表推导式 (list comprehension)** 类似。
+
+
+
+## 赎金信
+
+```python
+class Solution:
+    def canConstruct(self, ransomNote: str, magazine: str) -> bool:
+        import collections
+##        rans_dict = collections.Counter(for ch in list(ransomNote))
+        mag_dict = collections.Counter(ch for ch in list(magazine))
+        for ch in ransomNote:
+            if ch not in mag_dict or mag_dict[ch] == 0:
+                return False
+            else:
+                mag_dict[ch] -= 1
+        return True
+```
+
+mag_dict = collections.Counter(ch for ch in list(magazine)) 这一句使用了上一道题学到的生成器表达式，但是其实不用。字符串本身是一个==可迭代对象==，会一个个字符迭代出来。collections.Counter 接收任何 iterable，所以字符串完全没问题。
+
+所以有这几种写法
+
+```python
+rans_dict = collections.Counter(ransomNote)#直接传字符串
+
+rans_dict = collections.Counter(list(ransomNote))#传列表
+
+rans_dict = collections.Counter(ch for ch in ransomNote)#生成器表达式
+```
+
+
 
 ## 三数之和
 
